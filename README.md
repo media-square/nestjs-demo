@@ -1,7 +1,7 @@
 # Prerequisites
 - Docker
 - Node.js >= 20
-- npm >= 6
+- npm >= 10
 
 # Environment
 - Create a `.env` file in the root directory, use .env.example as template  
