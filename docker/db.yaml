@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  db_app:
+    image: postgres:14.6-alpine
+    container_name: postgres_demo
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+    volumes:
+      - ./db/db.sql:/docker-entrypoint-initdb.d/db.sql
+    ports:
+      - '5432:5432'
+
+  db_app_for_testing:
+    image: postgres:14.6-alpine
+    container_name: postgres_demo_for_testing
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app_test
+    volumes:
+      - ./db/db.sql:/docker-entrypoint-initdb.d/db.sql
+    ports:
+      - '5432:5432'
