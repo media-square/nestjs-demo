@@ -18,7 +18,7 @@
 App is running on [http://localhost:3000]()
 
 # API
-open [swagger](http://localhost:3000/swagger)
+open [swagger](http://localhost:3000/swagger)  
 First register an user and then login to get an access token  
 Use the access token from `auth/login` to access other secure endpoints  
 
