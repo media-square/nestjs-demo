@@ -13,7 +13,7 @@
 
 # Booting up the server
 - run `npm run db:up`
-- run `npm run start:dev` in other terminal
+- run `npm run start:dev` in another terminal
 
 App is running on [http://localhost:3000]()
 
@@ -26,7 +26,7 @@ Use the access token from `auth/login` to access other secure endpoints
 Setting up database for testing
 - run `npm run db:build:test`
 - run `npm run db:up:test`
-- run `npm run test` in other terminal
+- run `npm run test` in another terminal
 
 For VSCode you can use [node:test runner](https://marketplace.visualstudio.com/items?itemName=connor4312.nodejs-testing) to run tests
 
