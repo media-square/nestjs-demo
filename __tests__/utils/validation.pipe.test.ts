@@ -13,16 +13,22 @@ export const MockSchema = z.object({
 
 describe('ZodValidationPipe', () => {
   const pipe = new ZodValidationPipe(MockSchema);
+  const mocks = {
+    advisor: {
+      email: 'email@gmail.com',
+      password: '123456789012',
+      name: 'John',
+    },
+  };
 
   it('should validate and return the value if it matches the schema', () => {
-    const advisor = { email: 'email@gmail.com', password: '123456789012', name: 'John' };
     const metadata: ArgumentMetadata = { type: 'body' };
 
-    assert.deepStrictEqual(pipe.transform(advisor, metadata), advisor);
+    assert.deepStrictEqual(pipe.transform(mocks.advisor, metadata), mocks.advisor);
   });
 
   it('should throw BadRequestException if the value does not match the schema', () => {
-    const advisor = { email: 'email@gmail.com', password: '1234567890', name: 'John' };
+    const advisor = { ...mocks.advisor, password: 'short' };
     const metadata: ArgumentMetadata = { type: 'body' };
 
     assert.throws(
