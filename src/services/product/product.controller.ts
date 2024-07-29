@@ -46,9 +46,10 @@ export class ProductController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async getById(@CurrentUser() user: User, @Param('id') id: string): Promise<ProductEntity> {
     const product = await this.productService.getById(id);
-    this.guardAccess(product, user);
 
     if (!product) throw new NotFoundException(`Product with ID ${id} not found`);
+
+    this.guardAccess(product, user);
 
     return product;
   }

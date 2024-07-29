@@ -23,4 +23,4 @@ ALTER TABLE public.products ADD CONSTRAINT products_pkey PRIMARY KEY (id);
 ALTER TABLE public.products ADD CONSTRAINT products_advisor_id_fkey FOREIGN KEY (advisor_id) REFERENCES public.advisors(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE UNIQUE INDEX advisors_email_index ON public.advisors USING BTREE (email);
-CREATE UNIQUE INDEX products_advisor_id_index ON public.products USING BTREE (advisor_id);
+CREATE INDEX products_advisor_id_index ON public.products USING BTREE (advisor_id);
