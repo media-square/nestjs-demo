@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  storage:
+    extends:
+      file: ./services.yaml
+      service: storage
+    container_name: minio_for_testing
+    volumes:
+      - ./data/storage-testing:/data 
+  database:
+    extends:
+      file: ./services.yaml
+      service: database
+    container_name: postgres_demo_for_testing

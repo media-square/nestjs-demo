@@ -11,17 +11,20 @@ import { AuthGuard } from './services/auth/auth.gaurd';
 import { AdvisorEntity } from './services/advisor/advisor.entity';
 import { ProductEntity } from './services/product/product.entity';
 import { getDefaultTypeormConfig } from './utils/typeorm.config';
+import { StorageModule } from './services/storage/storage.module';
+import { UploadController } from './services/upload/upload.controller';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
+    StorageModule,
     JwtModule.registerAsync({
       global: true,
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         secret: configService.getOrThrow<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: configService.getOrThrow<string>('JWT_ACCESS_TOKEN_DURATION'),
+          expiresIn: configService.get<string>('JWT_ACCESS_TOKEN_DURATION', '8h'),
         },
       }),
       inject: [ConfigService],
@@ -38,6 +41,7 @@ import { getDefaultTypeormConfig } from './utils/typeorm.config';
     AdvisorModule,
     ProductModule,
   ],
+  controllers: [UploadController],
   providers: [
     {
       provide: APP_GUARD,
