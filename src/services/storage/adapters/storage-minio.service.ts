@@ -21,6 +21,15 @@ export class MinioStorageService implements MulterOptionsFactory {
     this.bucket = this.configService.get<string>('MINIO_BUCKET', '');
   }
 
+  private getEndpoint(): string {
+    const protocol = this.configService.get<boolean>('MINIO_FORCE_SSL', false) ? 'https' : 'http';
+    const host = this.configService.get<string>('MINIO_HOST', MinioStorageService.DEFAULT_HOST);
+    const port = this.configService.get<number>('MINIO_PORT', MinioStorageService.DEFAULT_PORT);
+    const url = new URL(`${protocol}://${host}:${port}/`);
+
+    return url.toString();
+  }
+
   private getClient(): S3Client {
     if (!this.client) {
       const endpoint = this.getEndpoint();
@@ -31,18 +40,10 @@ export class MinioStorageService implements MulterOptionsFactory {
           accessKeyId: this.configService.getOrThrow<string>('MINIO_ACCESS_KEY'),
           secretAccessKey: this.configService.getOrThrow<string>('MINIO_SECRET_KEY'),
         },
+        forcePathStyle: this.configService.get<boolean>('MINIO_FORCE_PATH_STYLE', true),
       });
     }
     return this.client;
-  }
-
-  private getEndpoint(): string {
-    const protocol = this.configService.get<boolean>('MINIO_FORCE_SSL', false) ? 'https' : 'http';
-    const host = this.configService.get<string>('MINIO_HOST', MinioStorageService.DEFAULT_HOST);
-    const port = this.configService.get<number>('MINIO_PORT', MinioStorageService.DEFAULT_PORT);
-    const url = new URL(`${protocol}://${host}:${port}/`);
-
-    return url.toString();
   }
 
   private getBucket(bucket?: string): string {
