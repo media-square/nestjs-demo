@@ -5,7 +5,7 @@ import { DataSourceOptions } from 'typeorm';
 export const getDefaultTypeormConfig = (configService: ConfigService): TypeOrmModuleOptions => ({
   type: 'postgres',
   host: configService.getOrThrow<string>('DATABASE_HOST'),
-  port: configService.get<number>('DATABASE_PORT') || 5432,
+  port: configService.get<number>('DATABASE_PORT', 5432),
   database: configService.getOrThrow<string>('DATABASE_NAME'),
   username: configService.getOrThrow<string>('DATABASE_USERNAME'),
   password: configService.getOrThrow<string>('DATABASE_PASSWORD'),

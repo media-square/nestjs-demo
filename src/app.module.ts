@@ -12,7 +12,7 @@ import { AdvisorEntity } from './services/advisor/advisor.entity';
 import { ProductEntity } from './services/product/product.entity';
 import { getDefaultTypeormConfig } from './utils/typeorm.config';
 import { StorageModule } from './services/storage/storage.module';
-import { UploadController } from './services/upload/upload.controller';
+import { UploadController } from './controllers/upload.controller';
 
 @Module({
   imports: [
