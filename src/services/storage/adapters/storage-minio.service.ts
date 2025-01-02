@@ -58,6 +58,12 @@ export class MinioStorageService implements MulterOptionsFactory {
       storage: multerS3({
         s3,
         bucket,
+        metadata: (req, file, cb) => {
+          cb(null, { fieldname: file.fieldname });
+        },
+        key: function (req, file, cb) {
+          cb(null, new Date().toISOString() + '-' + file.originalname);
+        },
       }),
     };
   }
