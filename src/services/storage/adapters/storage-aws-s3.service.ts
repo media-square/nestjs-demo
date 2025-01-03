@@ -4,17 +4,17 @@ import { ConfigService } from '@nestjs/config';
 import { MulterModuleOptions, MulterOptionsFactory } from '@nestjs/platform-express';
 import * as multerS3 from 'multer-s3';
 
+import { DynamicFileInterceptorOptions } from '../interceptors/dynamic-file.interceptor';
+
 @Injectable()
 export class AWSS3StorageService implements MulterOptionsFactory {
-  private client: S3Client;
+  protected client: S3Client;
 
-  private bucket: string;
+  protected readonly BUCKET_ENV_KEY: string = 'AWS_S3_BUCKET';
 
-  constructor(private readonly configService: ConfigService) {
-    this.bucket = this.configService.get<string>('AWS_S3_BUCKET', '');
-  }
+  constructor(protected readonly configService: ConfigService) {}
 
-  private getClient(): S3Client {
+  protected getClient(): S3Client {
     if (!this.client) {
       this.client = new S3Client({
         region: this.configService.getOrThrow<string>('AWS_REGION'),
@@ -27,13 +27,17 @@ export class AWSS3StorageService implements MulterOptionsFactory {
     return this.client;
   }
 
-  private getBucket(bucket?: string): string {
-    return bucket || this.bucket;
+  protected getBucket(bucket?: string): string {
+    let bucketEnvKey = this.BUCKET_ENV_KEY;
+    if (bucket && typeof bucket === 'string' && bucket.length > 0) {
+      bucketEnvKey = bucket;
+    }
+    return this.configService.getOrThrow<string>(bucketEnvKey);
   }
 
-  createMulterOptions(): MulterModuleOptions {
+  createMulterOptions(options?: DynamicFileInterceptorOptions): MulterModuleOptions {
     const s3 = this.getClient();
-    const bucket = this.getBucket();
+    const bucket = this.getBucket(options?.s3?.bucket);
 
     return {
       storage: multerS3({

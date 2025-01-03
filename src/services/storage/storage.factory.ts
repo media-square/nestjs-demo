@@ -3,6 +3,7 @@ import { MulterOptionsFactory, MulterModuleOptions } from '@nestjs/platform-expr
 import { ConfigService } from '@nestjs/config';
 
 import * as StorageAdapters from './adapters';
+import { DynamicFileInterceptorOptions } from './interceptors/dynamic-file.interceptor';
 
 @Injectable()
 export class StorageFactory implements MulterOptionsFactory {
@@ -13,13 +14,13 @@ export class StorageFactory implements MulterOptionsFactory {
   ) {}
 
   // Add service in this constructor and define Multer Storage Engine options here
-  createMulterOptions(): Promise<MulterModuleOptions> | MulterModuleOptions {
+  createMulterOptions(options?: DynamicFileInterceptorOptions): MulterModuleOptions {
     const storageEngine = this.configService.getOrThrow<string>('STORAGE_ENGINE');
     switch (storageEngine) {
       case 's3':
-        return this.awsS3StorageService.createMulterOptions();
+        return this.awsS3StorageService.createMulterOptions(options);
       case 'minio':
-        return this.minioStorageService.createMulterOptions();
+        return this.minioStorageService.createMulterOptions(options);
       default:
         throw new Error(`Invalid storage engine: ${storageEngine}`);
     }

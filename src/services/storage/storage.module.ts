@@ -15,6 +15,6 @@ import * as StorageAdapters from './adapters';
     }),
   ],
   providers: [ConfigService, StorageFactory, ...Object.values(StorageAdapters)],
-  exports: [MulterModule, ...Object.values(StorageAdapters)],
+  exports: [MulterModule, StorageFactory, ...Object.values(StorageAdapters)],
 })
 export class StorageModule {}
