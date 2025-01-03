@@ -16,15 +16,21 @@ export class MinioStorageService extends AWSS3StorageService implements MulterOp
 
   protected readonly DEFAULT_BUCKET_ENV_KEY: string = 'MINIO_BUCKET';
 
+  private protocol: string;
+
+  private host: string;
+
+  private port: number;
+
   constructor(configService: ConfigService) {
     super(configService);
+    this.protocol = this.configService.get<boolean>('MINIO_FORCE_SSL', false) ? 'https' : 'http';
+    this.host = this.configService.get<string>('MINIO_HOST', this.DEFAULT_HOST);
+    this.port = this.configService.get<number>('MINIO_PORT', this.DEFAULT_PORT);
   }
 
   private getEndpoint(): string {
-    const protocol = this.configService.get<boolean>('MINIO_FORCE_SSL', false) ? 'https' : 'http';
-    const host = this.configService.get<string>('MINIO_HOST', this.DEFAULT_HOST);
-    const port = this.configService.get<number>('MINIO_PORT', this.DEFAULT_PORT);
-    const url = new URL(`${protocol}://${host}:${port}/`);
+    const url = new URL(`${this.protocol}://${this.host}:${this.port}/`);
 
     return url.toString();
   }
