@@ -14,7 +14,7 @@ export class MinioStorageService extends AWSS3StorageService implements MulterOp
   // Minio doesn't care about regions, but we need to provide one to be compatible with the S3Client
   private readonly DEFAULT_REGION: string = 'eu-west-1';
 
-  protected readonly BUCKET_ENV_KEY: string = 'MINIO_BUCKET';
+  protected readonly DEFAULT_BUCKET_ENV_KEY: string = 'MINIO_BUCKET';
 
   constructor(configService: ConfigService) {
     super(configService);

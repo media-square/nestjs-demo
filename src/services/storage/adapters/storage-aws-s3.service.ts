@@ -10,7 +10,7 @@ import { DynamicFileInterceptorOptions } from '../interceptors/dynamic-file.inte
 export class AWSS3StorageService implements MulterOptionsFactory {
   protected client: S3Client;
 
-  protected readonly BUCKET_ENV_KEY: string = 'AWS_S3_BUCKET';
+  protected readonly DEFAULT_BUCKET_ENV_KEY: string = 'AWS_S3_BUCKET';
 
   constructor(protected readonly configService: ConfigService) {}
 
@@ -28,7 +28,7 @@ export class AWSS3StorageService implements MulterOptionsFactory {
   }
 
   protected getBucket(bucket?: string): string {
-    let bucketEnvKey = this.BUCKET_ENV_KEY;
+    let bucketEnvKey = this.DEFAULT_BUCKET_ENV_KEY;
     if (bucket && typeof bucket === 'string' && bucket.length > 0) {
       bucketEnvKey = bucket;
     }
