@@ -5,9 +5,19 @@ import { DynamicFileInterceptor } from 'src/services/storage/interceptors/dynami
 
 @Controller('upload')
 export class UploadController {
-  @Post()
+  @Post('document')
   // @Public()
-  @UseInterceptors(DynamicFileInterceptor({ s3: { bucket: 'MINIO_BUCKET_SOMETHING' } }))
+  @UseInterceptors(DynamicFileInterceptor({ s3: { bucket: 'AWS_S3_BUCKET_DOCUMENTS' } }))
+  async uploadDocument(@UploadedFile() file: Express.Multer.File) {
+    return {
+      filename: file.filename || file.originalname,
+      path: file.path,
+    };
+  }
+
+  @Post('file')
+  // @Public()
+  @UseInterceptors(DynamicFileInterceptor({ s3: { bucket: 'AWS_S3_BUCKET_FILES' } }))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     return {
       filename: file.filename || file.originalname,

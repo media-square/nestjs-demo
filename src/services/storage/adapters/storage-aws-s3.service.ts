@@ -12,6 +12,8 @@ export class AWSS3StorageService implements MulterOptionsFactory {
 
   protected readonly DEFAULT_BUCKET_ENV_KEY: string = 'AWS_S3_BUCKET';
 
+  private bucketMap: Map<string, MulterModuleOptions> = new Map();
+
   constructor(protected readonly configService: ConfigService) {}
 
   protected getClient(): S3Client {
@@ -36,20 +38,28 @@ export class AWSS3StorageService implements MulterOptionsFactory {
   }
 
   createMulterOptions(options?: DynamicFileInterceptorOptions): MulterModuleOptions {
-    const s3 = this.getClient();
     const bucket = this.getBucket(options?.s3?.bucket);
 
-    return {
-      storage: multerS3({
-        s3,
-        bucket,
-        metadata: (req, file, cb) => {
-          cb(null, { fieldname: file.fieldname });
-        },
-        key: function (req, file, cb) {
-          cb(null, new Date().toISOString() + '-' + file.originalname);
-        },
-      }),
-    };
+    return this.getStorageForBucket(bucket);
+  }
+
+  getStorageForBucket(bucket: string): MulterModuleOptions {
+    if (!this.bucketMap.has(bucket)) {
+      const s3 = this.getClient();
+      const options = {
+        storage: multerS3({
+          s3,
+          bucket,
+          metadata: (req, file, cb) => {
+            cb(null, { fieldname: file.fieldname });
+          },
+          key: function (req, file, cb) {
+            cb(null, new Date().toISOString() + '-' + file.originalname);
+          },
+        }),
+      };
+      this.bucketMap.set(bucket, options);
+    }
+    return this.bucketMap.get(bucket);
   }
 }
