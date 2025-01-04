@@ -77,9 +77,7 @@ export class AWSS3StorageService implements MulterOptionsFactory, StorageEngine 
       });
 
       await this.getClient().send(deleteCommand);
-      console.log(`Successfully removed ${fileKey} from bucket ${bucket}`);
     } catch (error) {
-      console.error(`Failed to remove file from S3: ${fileKey}`, error);
       throw new Error('File removal failed');
     }
   }
