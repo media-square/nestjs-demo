@@ -2,11 +2,11 @@ import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MulterModuleOptions, MulterOptionsFactory } from '@nestjs/platform-express';
+import { StorageEngine } from 'multer';
+import { Request } from 'express';
 import * as multerS3 from 'multer-s3';
 
 import { DynamicFileInterceptorOptions } from '../interceptors/dynamic-file.interceptor';
-import { StorageEngine } from 'multer';
-import { Request } from 'express';
 
 interface MulterFileWithLocation extends Express.Multer.File {
   location?: string;
