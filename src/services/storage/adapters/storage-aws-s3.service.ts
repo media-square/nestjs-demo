@@ -68,6 +68,22 @@ export class AWSS3StorageService implements MulterOptionsFactory, StorageEngine 
     return this.bucketMap.get(bucket);
   }
 
+  async removeFile(fileKey: string): Promise<void> {
+    try {
+      const bucket = this.getBucket();
+      const deleteCommand = new DeleteObjectCommand({
+        Bucket: bucket,
+        Key: fileKey,
+      });
+
+      await this.getClient().send(deleteCommand);
+      console.log(`Successfully removed ${fileKey} from bucket ${bucket}`);
+    } catch (error) {
+      console.error(`Failed to remove file from S3: ${fileKey}`, error);
+      throw new Error('File removal failed');
+    }
+  }
+
   async _handleFile(req: Request, file: Express.Multer.File, callback: (error: any, file?: Express.Multer.File) => void): Promise<void> {
     try {
       const { originalname, buffer } = file;
@@ -88,22 +104,6 @@ export class AWSS3StorageService implements MulterOptionsFactory, StorageEngine 
       callback(null, fileWithLocation);
     } catch (error) {
       callback(error);
-    }
-  }
-
-  async removeFile(fileKey: string): Promise<void> {
-    try {
-      const bucket = this.getBucket();
-      const deleteCommand = new DeleteObjectCommand({
-        Bucket: bucket,
-        Key: fileKey,
-      });
-
-      await this.getClient().send(deleteCommand);
-      console.log(`Successfully removed ${fileKey} from bucket ${bucket}`);
-    } catch (error) {
-      console.error(`Failed to remove file from S3: ${fileKey}`, error);
-      throw new Error('File removal failed');
     }
   }
 
